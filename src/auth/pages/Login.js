@@ -9,6 +9,7 @@ export const Login = () => {
   const [form, setForm] = useState({});
   const location = useLocation();
   const authMessage = location?.state?.authMessage || ""
+  const errorMessage = location?.state?.errorMessage || ""
   const successMessage = location?.state?.successMessage || ""
 
   const [loading, setLoading] = useState(false)
@@ -76,7 +77,7 @@ export const Login = () => {
           >
             Log in
           </h2>
-          <p className="my-4 text-red-600">{error || authMessage}</p>
+          <p className="my-4 text-red-600">{error || authMessage || errorMessage}</p>
           <p className="my-4 text-green-600">{successMessage}</p>
           <div className="mt-12">
             <form onSubmit={handleLogin}>

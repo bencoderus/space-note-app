@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthButton } from "../../auth/components/AuthButton";
 import { AuthSection } from "../../auth/components/AuthSection";
@@ -7,13 +7,23 @@ import { resetPassword } from "../services/auth-service";
 export const ResetPassword = () => {
   const [error, setError] = useState("");
   const [form, setForm] = useState({ password: "", password_confirmation: "" });
-  const navigate = useNavigate();
+  const [accessToken, setAccessToken] = useState("");
   const [disabled, setDisabled] = useState(false);
 
-  const url = window.location.href;
-  const [, urlData] = url.split("#");
-  const params = new URLSearchParams(urlData);
-  const accessToken = params.get("access_token");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const url = window.location.href;
+    const [, urlData] = url.split("#");
+    const params = new URLSearchParams(urlData || "");
+    const token = params.get("access_token") || "";
+
+    if (!token) {
+      navigate("/login", { state: { errorMessage: "Reset token is invalid or has expired." } });
+    }
+
+    setAccessToken(token);
+  }, [navigate, accessToken]);
 
   const validatePassword = (event) => {
     const targetName = event.target.name;
@@ -100,7 +110,7 @@ export const ResetPassword = () => {
         <div className="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl">
           <h2
             className="text-center text-4xl text-indigo-900 font-display font-semibold lg:text-left xl:text-5xl
-            xl:text-bold"
+          xl:text-bold"
           >
             Reset Password
           </h2>
