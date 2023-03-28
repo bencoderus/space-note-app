@@ -7,6 +7,8 @@ import { Guest } from "./common/middlewares/Guest";
 import { Auth } from "./common/middlewares/Auth";
 import { Dashboard } from "./dashboard/pages/Dashboard";
 import { ResetPassword } from "./auth/pages/ResetPassword";
+import { AddNote } from "./note/pages/AddNote";
+import { ShowNote } from "./note/pages/ShowNote";
 
 export const routerRoutes = [
   {
@@ -14,6 +16,22 @@ export const routerRoutes = [
     element: (
       <Auth>
         <Dashboard />
+      </Auth>
+    ),
+  },
+  {
+    path: "/notes/create",
+    element: (
+      <Auth>
+        <AddNote />
+      </Auth>
+    ),
+  },
+  {
+    path: "/note/:id",
+    element: (
+      <Auth>
+        <ShowNote />
       </Auth>
     ),
   },

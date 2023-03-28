@@ -1,4 +1,5 @@
 import React from "react";
+import { Spinner } from "../../common/components/Spinner";
 
 export const AuthButton = ({ type, text, loading }) => {
   return (
@@ -9,12 +10,19 @@ export const AuthButton = ({ type, text, loading }) => {
       type={type}
       disabled={loading}
     >
-      {loading ? "Please wait" : text}
+      {loading ? (
+        <span>
+          <Spinner />
+          Please wait...
+        </span>
+      ) : (
+        text
+      )}
     </button>
   );
 };
 
 AuthButton.defaultProps = {
   loading: false,
-  label: "Button Text"
+  label: "Button Text",
 };

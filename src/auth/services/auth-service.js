@@ -1,5 +1,5 @@
-import axios from "axios";
 import config from "../../common/config";
+import { apiRequest } from "../../common/services/request-service";
 
 const AUTH_TOKEN_KEY = "authToken";
 const AUTH_USER_KEY = "authUser";
@@ -8,7 +8,7 @@ export const PASSWORD_RESET_ROUTE = `${config.appUrl}/reset-password`;
 
 export const attemptLogin = async (data) => {
   try {
-    const response = await axios.post(`${config.baseUrl}/auth/login`, data);
+    const response = await apiRequest.post(`auth/login`, data);
 
     return {
       status: true,
@@ -18,35 +18,34 @@ export const attemptLogin = async (data) => {
   } catch (error) {
     return {
       status: false,
-      statusCode: error.response.status,
-      data: error.response.data,
+      statusCode: error.response ? error.response.status : 500,
+      data: error.response ? error.response.data : null,
     };
   }
 };
 
 export const forgotPassword = async (data) => {
   try {
-    const response = await axios.post(
-      `${config.baseUrl}/auth/forgot-password`,
-      data
-    );
+    const response = await apiRequest.post(`auth/forgot-password`, data);
 
     return {
       status: true,
+      statusCode: response.status,
       data: response.data,
     };
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      statusCode: error.response ? error.response.status : 500,
+      data: error.response ? error.response.data : null,
     };
   }
 };
 
 export const resetPassword = async (data) => {
   try {
-    const response = await axios.post(
-      `${config.baseUrl}/auth/reset-password`,
+    const response = await apiRequest.post(
+      `auth/reset-password`,
       {
         password: data.password,
       },
@@ -59,19 +58,21 @@ export const resetPassword = async (data) => {
 
     return {
       status: true,
+      statusCode: response.status,
       data: response.data,
     };
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      statusCode: error.response ? error.response.status : 500,
+      data: error.response ? error.response.data : null,
     };
   }
 };
 
 export const register = async (data) => {
   try {
-    const response = await axios.post(`${config.baseUrl}/auth/register`, data);
+    const response = await apiRequest.post(`auth/register`, data);
 
     return {
       status: true,
@@ -81,8 +82,8 @@ export const register = async (data) => {
   } catch (error) {
     return {
       status: false,
-      statusCode: error.response.status,
-      data: error.response.data,
+      statusCode: error.response ? error.response.status : 500,
+      data: error.response ? error.response.data : null,
     };
   }
 };
@@ -98,6 +99,12 @@ export const loginUser = (data) => {
   );
 
   localStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
+};
+
+export const getAccessToken = () => {
+  const authToken = JSON.parse(localStorage.getItem(AUTH_TOKEN_KEY) || "");
+
+  return authToken?.accessToken;
 };
 
 export const signOutUser = () => {
