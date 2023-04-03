@@ -1,7 +1,8 @@
 import { authApiRequest } from "../../common/services/request-service";
 
-const PINNED_STATUS = 'pinned';
-const ACTIVE_STATUS = 'active';
+const PINNED_STATUS = "pinned";
+const ARCHIVE_STATUS = "archived";
+const ACTIVE_STATUS = "active";
 
 export const getNotes = async () => {
   try {
@@ -22,8 +23,8 @@ export const getNoteByLastKey = async (lastKey) => {
   try {
     const response = await authApiRequest().get(`notes`, {
       params: {
-        lastKey
-      }
+        lastKey,
+      },
     });
     return {
       status: true,
@@ -40,7 +41,7 @@ export const getNoteByLastKey = async (lastKey) => {
 export const pinNoteById = async (noteId) => {
   try {
     const response = await authApiRequest().patch(`/notes/${noteId}/status`, {
-        status: PINNED_STATUS
+      status: PINNED_STATUS,
     });
 
     return {
@@ -53,7 +54,7 @@ export const pinNoteById = async (noteId) => {
       data: error.response ? error.response.data : error.message,
     };
   }
-}
+};
 
 export const deleteNoteById = async (noteId) => {
   try {
@@ -69,12 +70,12 @@ export const deleteNoteById = async (noteId) => {
       data: error.response ? error.response.data : error.message,
     };
   }
-}
+};
 
-export const unpinNoteById = async (noteId) => {
+export const archiveNoteById = async (noteId) => {
   try {
     const response = await authApiRequest().patch(`/notes/${noteId}/status`, {
-        status: ACTIVE_STATUS
+      status: ARCHIVE_STATUS,
     });
 
     return {
@@ -87,14 +88,32 @@ export const unpinNoteById = async (noteId) => {
       data: error.response ? error.response.data : error.message,
     };
   }
-}
+};
+
+export const unpinNoteById = async (noteId) => {
+  try {
+    const response = await authApiRequest().patch(`/notes/${noteId}/status`, {
+      status: ACTIVE_STATUS,
+    });
+
+    return {
+      status: true,
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      data: error.response ? error.response.data : error.message,
+    };
+  }
+};
 
 export const getPinnedNote = async () => {
   try {
     const response = await authApiRequest().get(`notes`, {
       params: {
-        status: PINNED_STATUS
-      }
+        status: PINNED_STATUS,
+      },
     });
 
     return {

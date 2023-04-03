@@ -5,7 +5,10 @@ import { Link } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
 import { Spinner } from "../../common/components/Spinner";
 
-export const Note = ({ loading, note, pinAction, isPinned, deleteAction }) => {
+export const Note = ({ loading, note, actions, isPinned }) => {
+  const {pinNote, unpinNote, deleteNote, archiveNote} = actions;
+  const pinAction = isPinned ? unpinNote : pinNote;
+
   const [isOpen, setIsOpen] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const dropdownRef = useRef(null);
@@ -19,6 +22,7 @@ export const Note = ({ loading, note, pinAction, isPinned, deleteAction }) => {
   }, []);
 
   const handleClickOutside = (event) => {
+    // @ts-ignore
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
@@ -60,7 +64,7 @@ export const Note = ({ loading, note, pinAction, isPinned, deleteAction }) => {
                     <li>
                       <button
                         className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
-                        onClick={() => alert("Archive clicked")}
+                        onClick={() => archiveNote(note.noteId, isPinned, setDisabled)}
                         disabled={disabled}
                       >
                         Archive
@@ -70,7 +74,7 @@ export const Note = ({ loading, note, pinAction, isPinned, deleteAction }) => {
                       <button
                         className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
                         onClick={() =>
-                          deleteAction(note.noteId, isPinned, setDisabled)
+                          deleteNote(note.noteId, isPinned, setDisabled)
                         }
                         disabled={disabled}
                       >

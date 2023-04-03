@@ -1,10 +1,11 @@
 import { Editor } from "@tinymce/tinymce-react";
 import React, { forwardRef } from "react";
+import config from "../../common/config";
 
 export const ContentEditor = forwardRef(({ initialValue }, ref) => {
   return (
     <Editor
-      apiKey="t8bzg0s7rwpxzp91ytu54b9rrhpy1uvs5a1dkd4npls3uxxa"
+      apiKey={config.tinyMceKey}
       onInit={(evt, editor) => (ref.current = editor)}
       initialValue={initialValue}
       init={{

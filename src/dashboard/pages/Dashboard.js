@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Notes } from "../../note/components/Notes";
 import {
+  archiveNoteById,
   deleteNoteById,
   getNoteByLastKey,
   getNotes,
@@ -14,11 +15,13 @@ import { FaPlus } from "react-icons/fa";
 import { LoadMore } from "../../note/components/LoadMore";
 import { toast } from "react-toastify";
 
+
 export const Dashboard = () => {
   const [notes, setNotes] = useState([]);
   const [pinnedNotes, setPinnedNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastKey, setLastKey] = useState(null);
+
 
   const pinNote = async (noteId, setDisabled) => {
     setDisabled(true);
@@ -69,6 +72,23 @@ export const Dashboard = () => {
 
     setDisabled(false);
     toast.error("Unable to remove note.");
+    return;
+  };
+
+  const archiveNote = async (noteId, isPinned, setDisabled) => {
+    setDisabled(true);
+
+    const response = await archiveNoteById(noteId);
+
+    if (response.status) {
+      removeNote(noteId, isPinned);
+      setDisabled(false);
+      toast.success("Note archived successfully");
+      return;
+    }
+
+    setDisabled(false);
+    toast.error("Unable to archive note.");
     return;
   };
 
@@ -130,8 +150,7 @@ export const Dashboard = () => {
           <Notes
             loading={loading}
             notes={pinnedNotes}
-            pinAction={unpinNote}
-            deleteAction={deleteNote}
+            actions={{pinNote, unpinNote, deleteNote, archiveNote}}
             isPinned={true}
           />
         </div>
@@ -144,8 +163,7 @@ export const Dashboard = () => {
         <Notes
           loading={loading}
           notes={notes}
-          deleteAction={deleteNote}
-          pinAction={pinNote}
+          actions={{pinNote, unpinNote, deleteNote, archiveNote}}
           isPinned={false}
         />
       </div>

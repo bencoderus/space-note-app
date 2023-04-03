@@ -8,7 +8,7 @@ export const PASSWORD_RESET_ROUTE = `${config.appUrl}/reset-password`;
 
 export const attemptLogin = async (data) => {
   try {
-    const response = await apiRequest.post(`auth/login`, data);
+    const response = await apiRequest().post(`auth/login`, data);
 
     return {
       status: true,
@@ -26,7 +26,7 @@ export const attemptLogin = async (data) => {
 
 export const forgotPassword = async (data) => {
   try {
-    const response = await apiRequest.post(`auth/forgot-password`, data);
+    const response = await apiRequest().post(`auth/forgot-password`, data);
 
     return {
       status: true,
@@ -44,7 +44,7 @@ export const forgotPassword = async (data) => {
 
 export const resetPassword = async (data) => {
   try {
-    const response = await apiRequest.post(
+    const response = await apiRequest().post(
       `auth/reset-password`,
       {
         password: data.password,
@@ -72,7 +72,7 @@ export const resetPassword = async (data) => {
 
 export const register = async (data) => {
   try {
-    const response = await apiRequest.post(`auth/register`, data);
+    const response = await apiRequest().post(`auth/register`, data);
 
     return {
       status: true,
