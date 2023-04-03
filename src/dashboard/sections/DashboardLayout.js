@@ -16,6 +16,7 @@ export const DashboardLayout = ({ children, title, sideContent }) => {
 
   return (
     <div className="container mx-auto mb-10">
+      
       <div className="flex justify-between my-6">
         <Link to="/" className="text-2xl font-bold">
           SpaceNote

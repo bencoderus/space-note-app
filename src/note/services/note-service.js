@@ -13,7 +13,7 @@ export const getNotes = async () => {
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      data: error.response ? error.response.data : error.message,
     };
   }
 };
@@ -32,7 +32,7 @@ export const getNoteByLastKey = async (lastKey) => {
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      data: error.response ? error.response.data : error.message,
     };
   }
 };
@@ -50,7 +50,23 @@ export const pinNoteById = async (noteId) => {
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      data: error.response ? error.response.data : error.message,
+    };
+  }
+}
+
+export const deleteNoteById = async (noteId) => {
+  try {
+    const response = await authApiRequest().delete(`/notes/${noteId}`);
+
+    return {
+      status: true,
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      data: error.response ? error.response.data : error.message,
     };
   }
 }
@@ -68,7 +84,7 @@ export const unpinNoteById = async (noteId) => {
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      data: error.response ? error.response.data : error.message,
     };
   }
 }
@@ -81,7 +97,6 @@ export const getPinnedNote = async () => {
       }
     });
 
-    console.log(response.data);
     return {
       status: true,
       data: response.data,
@@ -89,7 +104,7 @@ export const getPinnedNote = async () => {
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      data: error.response ? error.response.data : error.message,
     };
   }
 };
@@ -104,7 +119,7 @@ export const getNote = async (noteId) => {
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      data: error.response ? error.response.data : error.message,
     };
   }
 };
@@ -119,7 +134,7 @@ export const updateNote = async (noteId, data) => {
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      data: error.response ? error.response.data : error.message,
     };
   }
 };
@@ -134,7 +149,7 @@ export const createNote = async (data) => {
   } catch (error) {
     return {
       status: false,
-      data: error.response.data,
+      data: error.response ? error.response.data : error.message,
     };
   }
 };

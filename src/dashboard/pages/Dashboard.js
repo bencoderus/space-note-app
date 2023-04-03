@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Notes } from "../../note/components/Notes";
 import {
+  deleteNoteById,
   getNoteByLastKey,
   getNotes,
   getPinnedNote,
@@ -11,6 +12,7 @@ import {
 import { DashboardLayout } from "../sections/DashboardLayout";
 import { FaPlus } from "react-icons/fa";
 import { LoadMore } from "../../note/components/LoadMore";
+import { toast } from "react-toastify";
 
 export const Dashboard = () => {
   const [notes, setNotes] = useState([]);
@@ -25,7 +27,6 @@ export const Dashboard = () => {
     });
 
     if (!note) {
-      console.log("Unable to pin note.");
       setDisabled(false);
       return;
     }
@@ -36,9 +37,39 @@ export const Dashboard = () => {
       setPinnedNotes([note, ...pinnedNotes]);
 
       setNotes(notes.filter((note, key) => note.noteId !== noteId));
+      setDisabled(false);
+      toast.success("Note pinned successfully");
+      return;
     }
 
     setDisabled(false);
+    toast.error("Unable to remove note.");
+    return;
+  };
+
+  const removeNote = (noteId, isPinned) => {
+    if (isPinned) {
+      setPinnedNotes(pinnedNotes.filter((note) => note.noteId !== noteId));
+    } else {
+      setNotes(notes.filter((note) => note.noteId !== noteId));
+    }
+  };
+
+  const deleteNote = async (noteId, isPinned, setDisabled) => {
+    setDisabled(true);
+
+    const response = await deleteNoteById(noteId);
+
+    if (response.status) {
+      removeNote(noteId, isPinned);
+      setDisabled(false);
+      toast.success("Note removed successfully");
+      return;
+    }
+
+    setDisabled(false);
+    toast.error("Unable to remove note.");
+    return;
   };
 
   const unpinNote = async (noteId, setDisabled) => {
@@ -48,7 +79,6 @@ export const Dashboard = () => {
     });
 
     if (!note) {
-      console.log("Unable to pin note.");
       setDisabled(false);
       return;
     }
@@ -59,9 +89,14 @@ export const Dashboard = () => {
       setNotes([note, ...notes]);
 
       setPinnedNotes(pinnedNotes.filter((note, key) => note.noteId !== noteId));
+      toast.success("Note unpinned successfully.");
+      setDisabled(false);
+      return;
     }
 
     setDisabled(false);
+    toast.error("Unable to unpin note.");
+    return;
   };
 
   useEffect(() => {
@@ -72,7 +107,7 @@ export const Dashboard = () => {
       if (response.status && pinnedResponse.status) {
         setNotes(response.data.data.records);
         setPinnedNotes(pinnedResponse.data.data.records);
-        setLastKey(response.data.data.lastKey)
+        setLastKey(response.data.data.lastKey);
         setLoading(false);
       }
     };
@@ -96,6 +131,7 @@ export const Dashboard = () => {
             loading={loading}
             notes={pinnedNotes}
             pinAction={unpinNote}
+            deleteAction={deleteNote}
             isPinned={true}
           />
         </div>
@@ -108,12 +144,20 @@ export const Dashboard = () => {
         <Notes
           loading={loading}
           notes={notes}
+          deleteAction={deleteNote}
           pinAction={pinNote}
           isPinned={false}
         />
       </div>
 
-      <LoadMore text="Load More" state={notes} setState={setNotes} lastKey={lastKey} setLastKey={setLastKey} action={getNoteByLastKey}/>
+      <LoadMore
+        text="Load More"
+        state={notes}
+        setState={setNotes}
+        lastKey={lastKey}
+        setLastKey={setLastKey}
+        action={getNoteByLastKey}
+      />
     </DashboardLayout>
   );
 };

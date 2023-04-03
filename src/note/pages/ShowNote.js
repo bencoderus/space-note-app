@@ -22,7 +22,7 @@ export const ShowNote = () => {
         const note = response.data.data;
         setForm({
           title: note.title,
-          content: note.title,
+          content: note.content,
         });
       }
 
