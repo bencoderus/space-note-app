@@ -9,7 +9,6 @@ import { NoteButton } from "../components/NoteButton";
 export const AddNote = () => {
   const editorRef = useRef(null);
 
-
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -30,12 +29,13 @@ export const AddNote = () => {
       ...form,
       content: editorRef.current.getContent(),
     };
+
     const response = await createNote(data);
 
     if (!response.status) {
-      setError(response?.data?.message);
       setLoading(false);
-      toast.error('Unable to create note');
+      setError(response.message)
+      toast.error(response.message);
       return;
     }
 

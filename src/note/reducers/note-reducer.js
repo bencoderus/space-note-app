@@ -5,67 +5,110 @@ export const NOTE_REDUCER_INITIAL_STATE = {
   loading: true,
 };
 
-export const ACTIONS = {
+export const NOTE_REDUCER_ACTIONS = {
   FETCH_COMPLETED: "fetch_completed",
-  DELETE_NOTE: "delete_note",
-  ADD_NOTE: "add_note",
-  ADD_LAST_KEY: "add_last_key",
-  ADD_PINNED_NOTES: "add_pinned_notes",
+  REMOVE_NOTE: "delete_note",
+  ADD_NOTES: "add_notes",
+  SET_NOTE: "set_note",
+  SET_LAST_KEY: "set_last_key",
+  SET_PINNED_NOTES: "set_pinned_notes",
   ARCHIVE_NOTE: "archive_note",
   PIN_NOTE: "pin_note",
+  UNPIN_NOTE: "unpin_note",
 };
 
+/**
+ * Add notes reducer.
+ *
+ * @param {{notes: Array<any>, lastKey: string, pinnedNotes: Array<any>, loading: boolean}} state
+ * @param {Record<string, any>} action
+ * @returns {{notes: Array<any>, lastKey: string, pinnedNotes: Array<any>, loading: boolean}}
+ */
 export const noteReducer = (state, action) => {
   switch (action.type) {
-    case ACTIONS.FETCH_COMPLETED: {
+    case NOTE_REDUCER_ACTIONS.FETCH_COMPLETED: {
       return {
         ...state,
         loading: false,
       };
     }
-    case ACTIONS.ADD_NOTE: {
+
+    case NOTE_REDUCER_ACTIONS.SET_NOTE: {
       return {
         ...state,
         notes: action.notes,
       };
     }
-    case ACTIONS.ADD_PINNED_NOTES: {
+
+    case NOTE_REDUCER_ACTIONS.ADD_NOTES: {
+      return {
+        ...state,
+        notes: [...state.notes, ...action.notes],
+      };
+    }
+
+    case NOTE_REDUCER_ACTIONS.SET_PINNED_NOTES: {
       return {
         ...state,
         pinnedNotes: action.notes,
       };
     }
-    case ACTIONS.PIN_NOTE: {
+
+    case NOTE_REDUCER_ACTIONS.PIN_NOTE: {
       return {
         ...state,
+        pinnedNotes: [
+          state.notes.find((note) => note.noteId === action.noteId),
+          ...state.pinnedNotes,
+        ],
         notes: state.notes.filter((note, key) => note.noteId !== action.noteId),
-        pinnedNotes: [state.notes.find((note) => (note.noteId === action.noteId)), ...state.pinnedNotes],
       };
     }
 
-    case ACTIONS.UNPIN_NOTE: {
+    case NOTE_REDUCER_ACTIONS.UNPIN_NOTE: {
       return {
         ...state,
-        pinnedNotes: state.pinnedNotes.filter((note, key) => note.noteId !== action.noteId),
-        notes: [...state.notes, state.notes.find((note) => (note.noteId === action.noteId))],
+        notes: [
+          ...state.notes,
+          state.pinnedNotes.find((note) => note.noteId === action.noteId),
+        ],
+        pinnedNotes: state.pinnedNotes.filter(
+          (note) => note.noteId !== action.noteId
+        ),
       };
     }
 
-    case ACTIONS.ARCHIVE_NOTE: {
+    case NOTE_REDUCER_ACTIONS.ARCHIVE_NOTE: {
       return {
         ...state,
-        notes: action.isPinned ? state.notes : state.notes.filter((note) => note.noteId !== action.noteId),
-        pinnedNotes: action.isPinned ? state.pinnedNotes.filter((note) => note.noteId !== action.noteId) : state.pinnedNotes
+        notes: action.isPinned
+          ? state.notes
+          : state.notes.filter((note) => note.noteId !== action.noteId),
+        pinnedNotes: action.isPinned
+          ? state.pinnedNotes.filter((note) => note.noteId !== action.noteId)
+          : state.pinnedNotes,
       };
     }
 
-    case ACTIONS.DELETE_NOTE: {
-        return {
-            ...state,
-            notes: action.isPinned ? state.notes : state.notes.filter((note) => note.noteId !== action.noteId),
-            pinnedNotes: action.isPinned ? state.pinnedNotes.filter((note) => note.noteId !== action.noteId) : state.pinnedNotes
-          };
+    case NOTE_REDUCER_ACTIONS.SET_LAST_KEY: {
+      return {
+        ...state,
+        lastKey: action.lastKey,
+      };
     }
+
+    case NOTE_REDUCER_ACTIONS.REMOVE_NOTE: {
+      return {
+        ...state,
+        notes: action.isPinned
+          ? state.notes
+          : state.notes.filter((note) => note.noteId !== action.noteId),
+        pinnedNotes: action.isPinned
+          ? state.pinnedNotes.filter((note) => note.noteId !== action.noteId)
+          : state.pinnedNotes,
+      };
+    }
+
     default: {
       return state;
     }

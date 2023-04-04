@@ -1,174 +1,97 @@
-import { authApiRequest } from "../../common/services/request-service";
+import config from "../../common/config";
+import { apiRequest } from "../../common/services/request-service";
 
 const PINNED_STATUS = "pinned";
 const ARCHIVE_STATUS = "archived";
 const ACTIVE_STATUS = "active";
 
+const noteClient = () => {
+  return apiRequest.setBaseUrl(config.apiUrl).useAuth();
+};
+
 export const getNotes = async () => {
-  try {
-    const response = await authApiRequest().get(`notes`);
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+  return noteClient().send({
+    url: "notes",
+    method: "GET",
+  });
 };
 
 export const getNoteByLastKey = async (lastKey) => {
-  try {
-    const response = await authApiRequest().get(`notes`, {
-      params: {
-        lastKey,
-      },
-    });
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+  return noteClient().send({
+    url: "notes",
+    method: "GET",
+    query: {
+      lastKey,
+    },
+  });
 };
 
 export const pinNoteById = async (noteId) => {
-  try {
-    const response = await authApiRequest().patch(`/notes/${noteId}/status`, {
+  return noteClient().send({
+    url: `/notes/${noteId}/status`,
+    method: "PATCH",
+    data: {
       status: PINNED_STATUS,
-    });
-
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+    },
+  });
 };
 
 export const deleteNoteById = async (noteId) => {
-  try {
-    const response = await authApiRequest().delete(`/notes/${noteId}`);
-
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+  return noteClient().send({
+    url: `/notes/${noteId}`,
+    method: "DELETE",
+  });
 };
 
 export const archiveNoteById = async (noteId) => {
-  try {
-    const response = await authApiRequest().patch(`/notes/${noteId}/status`, {
+  return noteClient().send({
+    url: `/notes/${noteId}/status`,
+    method: "PATCH",
+    data: {
       status: ARCHIVE_STATUS,
-    });
-
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+    },
+  });
 };
 
 export const unpinNoteById = async (noteId) => {
-  try {
-    const response = await authApiRequest().patch(`/notes/${noteId}/status`, {
+  return noteClient().send({
+    url: `/notes/${noteId}/status`,
+    method: "PATCH",
+    data: {
       status: ACTIVE_STATUS,
-    });
-
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+    },
+  });
 };
 
 export const getPinnedNote = async () => {
-  try {
-    const response = await authApiRequest().get(`notes`, {
-      params: {
-        status: PINNED_STATUS,
-      },
-    });
-
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+  return noteClient().send({
+    url: "notes",
+    method: "GET",
+    query: {
+      status: PINNED_STATUS,
+    },
+  });
 };
 
 export const getNote = async (noteId) => {
-  try {
-    const response = await authApiRequest().get(`notes/${noteId}`);
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+  return noteClient().send({
+    url: `notes/${noteId}`,
+    method: "GET"
+  });
 };
 
 export const updateNote = async (noteId, data) => {
-  try {
-    const response = await authApiRequest().put(`notes/${noteId}`, data);
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+  return noteClient().send({
+    url: `notes/${noteId}`,
+    method: "PUT",
+    data,
+  });
 };
 
 export const createNote = async (data) => {
-  try {
-    const response = await authApiRequest().post(`notes`, data);
-    return {
-      status: true,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      data: error.response ? error.response.data : error.message,
-    };
-  }
+  return noteClient().send({
+    url: "notes",
+    method: "POST",
+    data,
+  });
 };

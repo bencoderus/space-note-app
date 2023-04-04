@@ -6,86 +6,43 @@ const AUTH_USER_KEY = "authUser";
 
 export const PASSWORD_RESET_ROUTE = `${config.appUrl}/reset-password`;
 
-export const attemptLogin = async (data) => {
-  try {
-    const response = await apiRequest().post(`auth/login`, data);
+const authClient = () => {
+  return apiRequest.setBaseUrl(config.apiUrl);
+};
 
-    return {
-      status: true,
-      statusCode: response.status,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      statusCode: error.response ? error.response.status : 500,
-      data: error.response ? error.response.data : null,
-    };
-  }
+export const attemptLogin = async (data) => {
+  return authClient().send({
+    url: "auth/login",
+    method: "POST",
+    data,
+  });
 };
 
 export const forgotPassword = async (data) => {
-  try {
-    const response = await apiRequest().post(`auth/forgot-password`, data);
-
-    return {
-      status: true,
-      statusCode: response.status,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      statusCode: error.response ? error.response.status : 500,
-      data: error.response ? error.response.data : null,
-    };
-  }
+  return authClient().send({
+    url: "auth/forgot-password",
+    method: "POST",
+    data,
+  });
 };
 
 export const resetPassword = async (data) => {
-  try {
-    const response = await apiRequest().post(
-      `auth/reset-password`,
-      {
-        password: data.password,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${data.accessToken}`,
-        },
-      }
-    );
-
-    return {
-      status: true,
-      statusCode: response.status,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      statusCode: error.response ? error.response.status : 500,
-      data: error.response ? error.response.data : null,
-    };
-  }
+  return authClient().send({
+    url: "auth/reset-password",
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${data.accessToken}`,
+    },
+    data,
+  });
 };
 
 export const register = async (data) => {
-  try {
-    const response = await apiRequest().post(`auth/register`, data);
-
-    return {
-      status: true,
-      statusCode: response.status,
-      data: response.data,
-    };
-  } catch (error) {
-    return {
-      status: false,
-      statusCode: error.response ? error.response.status : 500,
-      data: error.response ? error.response.data : null,
-    };
-  }
+  return authClient().send({
+    url: "auth/register",
+    method: "POST",
+    data,
+  });
 };
 
 export const loginUser = (data) => {

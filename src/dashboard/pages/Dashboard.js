@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { Link } from "react-router-dom";
 import { Notes } from "../../note/components/Notes";
 import {
@@ -14,32 +14,24 @@ import { DashboardLayout } from "../sections/DashboardLayout";
 import { FaPlus } from "react-icons/fa";
 import { LoadMore } from "../../note/components/LoadMore";
 import { toast } from "react-toastify";
-
+import {
+  NOTE_REDUCER_ACTIONS,
+  NOTE_REDUCER_INITIAL_STATE,
+  noteReducer,
+} from "../../note/reducers/note-reducer";
 
 export const Dashboard = () => {
-  const [notes, setNotes] = useState([]);
-  const [pinnedNotes, setPinnedNotes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [lastKey, setLastKey] = useState(null);
+  const [state, dispatch] = useReducer(noteReducer, NOTE_REDUCER_INITIAL_STATE);
+  const { pinnedNotes, notes, loading, lastKey } = state;
 
 
   const pinNote = async (noteId, setDisabled) => {
     setDisabled(true);
-    const note = notes.find((note) => {
-      return note.noteId === noteId;
-    });
 
-    if (!note) {
-      setDisabled(false);
-      return;
-    }
-
-    const response = await pinNoteById(note.noteId);
+    const response = await pinNoteById(noteId);
 
     if (response.status) {
-      setPinnedNotes([note, ...pinnedNotes]);
-
-      setNotes(notes.filter((note, key) => note.noteId !== noteId));
+      dispatch({ type: NOTE_REDUCER_ACTIONS.PIN_NOTE, noteId });
       setDisabled(false);
       toast.success("Note pinned successfully");
       return;
@@ -50,21 +42,13 @@ export const Dashboard = () => {
     return;
   };
 
-  const removeNote = (noteId, isPinned) => {
-    if (isPinned) {
-      setPinnedNotes(pinnedNotes.filter((note) => note.noteId !== noteId));
-    } else {
-      setNotes(notes.filter((note) => note.noteId !== noteId));
-    }
-  };
-
   const deleteNote = async (noteId, isPinned, setDisabled) => {
     setDisabled(true);
 
     const response = await deleteNoteById(noteId);
 
     if (response.status) {
-      removeNote(noteId, isPinned);
+      dispatch({ type: NOTE_REDUCER_ACTIONS.REMOVE_NOTE, noteId, isPinned });
       setDisabled(false);
       toast.success("Note removed successfully");
       return;
@@ -81,7 +65,7 @@ export const Dashboard = () => {
     const response = await archiveNoteById(noteId);
 
     if (response.status) {
-      removeNote(noteId, isPinned);
+      dispatch({ type: NOTE_REDUCER_ACTIONS.REMOVE_NOTE, noteId, isPinned });
       setDisabled(false);
       toast.success("Note archived successfully");
       return;
@@ -94,21 +78,11 @@ export const Dashboard = () => {
 
   const unpinNote = async (noteId, setDisabled) => {
     setDisabled(true);
-    const note = pinnedNotes.find((note) => {
-      return note.noteId === noteId;
-    });
 
-    if (!note) {
-      setDisabled(false);
-      return;
-    }
-
-    const response = await unpinNoteById(note.noteId);
+    const response = await unpinNoteById(noteId);
 
     if (response.status) {
-      setNotes([note, ...notes]);
-
-      setPinnedNotes(pinnedNotes.filter((note, key) => note.noteId !== noteId));
+      dispatch({ type: NOTE_REDUCER_ACTIONS.UNPIN_NOTE, noteId });
       toast.success("Note unpinned successfully.");
       setDisabled(false);
       return;
@@ -125,10 +99,20 @@ export const Dashboard = () => {
       const pinnedResponse = await getPinnedNote();
 
       if (response.status && pinnedResponse.status) {
-        setNotes(response.data.data.records);
-        setPinnedNotes(pinnedResponse.data.data.records);
-        setLastKey(response.data.data.lastKey);
-        setLoading(false);
+        dispatch({
+          type: NOTE_REDUCER_ACTIONS.SET_NOTE,
+          notes: response.data.data.records,
+        });
+        dispatch({
+          type: NOTE_REDUCER_ACTIONS.SET_PINNED_NOTES,
+          notes: pinnedResponse.data.data.records,
+        });
+        dispatch({
+          type: NOTE_REDUCER_ACTIONS.SET_LAST_KEY,
+          lastKey: response.data.data.lastKey,
+        });
+
+        dispatch({ type: NOTE_REDUCER_ACTIONS.FETCH_COMPLETED });
       }
     };
 
@@ -150,7 +134,7 @@ export const Dashboard = () => {
           <Notes
             loading={loading}
             notes={pinnedNotes}
-            actions={{pinNote, unpinNote, deleteNote, archiveNote}}
+            actions={{ pinNote, unpinNote, deleteNote, archiveNote }}
             isPinned={true}
           />
         </div>
@@ -163,17 +147,15 @@ export const Dashboard = () => {
         <Notes
           loading={loading}
           notes={notes}
-          actions={{pinNote, unpinNote, deleteNote, archiveNote}}
+          actions={{ pinNote, unpinNote, deleteNote, archiveNote }}
           isPinned={false}
         />
       </div>
 
       <LoadMore
         text="Load More"
-        state={notes}
-        setState={setNotes}
+        dispatcher={dispatch}
         lastKey={lastKey}
-        setLastKey={setLastKey}
         action={getNoteByLastKey}
       />
     </DashboardLayout>
