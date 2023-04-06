@@ -5,7 +5,6 @@ export const Notes = ({
   loading,
   notes,
   skeletonCount,
-  isPinned,
   actions
 }) => {
   const loader = Array.from({ length: skeletonCount });
@@ -19,7 +18,6 @@ export const Notes = ({
               key={key}
               note={note}
               actions={actions}
-              isPinned={isPinned}
             />
           ))
         : notes.map((note, key) => (
@@ -28,7 +26,6 @@ export const Notes = ({
               key={key}
               loading={loading}
               actions={actions}
-              isPinned={isPinned}
             />
           ))}
     </div>

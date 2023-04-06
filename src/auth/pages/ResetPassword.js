@@ -63,7 +63,7 @@ export const ResetPassword = () => {
     });
 
     if (!response.status) {
-      setError(response?.data?.message);
+      setError(response.message);
 
       setDisabled(false);
       return;

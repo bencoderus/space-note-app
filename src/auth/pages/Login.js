@@ -28,7 +28,7 @@ export const Login = () => {
     const response = await attemptLogin(form);
 
     if (!response.status) {
-      setError(response?.data?.message);
+      setError(response.message);
       setLoading(false);
       return;
     }

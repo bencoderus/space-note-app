@@ -1,3 +1,5 @@
+import { NOTES_STATUSES } from "../services/note-service";
+
 export const NOTE_REDUCER_INITIAL_STATE = {
   notes: [],
   lastKey: "",
@@ -14,6 +16,7 @@ export const NOTE_REDUCER_ACTIONS = {
   SET_PINNED_NOTES: "set_pinned_notes",
   ARCHIVE_NOTE: "archive_note",
   PIN_NOTE: "pin_note",
+  MARK_AS_ACTIVE: "mark_as_active",
   UNPIN_NOTE: "unpin_note",
 };
 
@@ -55,26 +58,35 @@ export const noteReducer = (state, action) => {
     }
 
     case NOTE_REDUCER_ACTIONS.PIN_NOTE: {
+      const note = state.notes.find((note) => note.noteId === action.noteId);
+      note["status"] = NOTES_STATUSES.PINNED_STATUS;
+
       return {
         ...state,
-        pinnedNotes: [
-          state.notes.find((note) => note.noteId === action.noteId),
-          ...state.pinnedNotes,
-        ],
+        pinnedNotes: [note, ...state.pinnedNotes],
         notes: state.notes.filter((note, key) => note.noteId !== action.noteId),
       };
     }
 
     case NOTE_REDUCER_ACTIONS.UNPIN_NOTE: {
+      const note = state.pinnedNotes.find(
+        (note) => note.noteId === action.noteId
+      );
+      note["status"] = NOTES_STATUSES.ACTIVE_STATUS;
+
       return {
         ...state,
-        notes: [
-          ...state.notes,
-          state.pinnedNotes.find((note) => note.noteId === action.noteId),
-        ],
+        notes: [...state.notes, note],
         pinnedNotes: state.pinnedNotes.filter(
           (note) => note.noteId !== action.noteId
         ),
+      };
+    }
+
+    case NOTE_REDUCER_ACTIONS.MARK_AS_ACTIVE: {
+      return {
+        ...state,
+        notes: state.notes.filter((note) => note.noteId !== action.noteId)
       };
     }
 

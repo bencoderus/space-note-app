@@ -91,6 +91,7 @@ export const apiRequest = {
     }
 
     if (objectIsset(query)) {
+      
       requestData["params"] = query;
     }
     const generatedHeaders = this._generateHeaders(headers);
@@ -99,6 +100,7 @@ export const apiRequest = {
       requestData["headers"] = generatedHeaders;
     }
 
+    console.log(requestData);
     try {
       const response = await axios(requestData);
 

@@ -4,10 +4,11 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { Link } from "react-router-dom";
 import { FaEllipsisV } from "react-icons/fa";
 import { Spinner } from "../../common/components/Spinner";
+import { NOTES_STATUSES } from "../services/note-service";
 
-export const Note = ({ loading, note, actions, isPinned }) => {
-  const {pinNote, unpinNote, deleteNote, archiveNote} = actions;
-  const pinAction = isPinned ? unpinNote : pinNote;
+export const Note = ({ loading, note, actions }) => {
+  const { pinNote, unpinNote, deleteNote, archiveNote, setAsActive } = actions;
+  const isPinned = note && note.status === NOTES_STATUSES.PINNED_STATUS;
 
   const [isOpen, setIsOpen] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -30,7 +31,7 @@ export const Note = ({ loading, note, actions, isPinned }) => {
 
   return (
     <div className="flex justify-center">
-      <div className="lg:mx-0 max-w-sm p-4 mx-4 w-full h-44 flex justify-between flex-col bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      <div className="lg:mx-0 max-w-sm p-4 mx-4 w-full h-44 flex justify-between flex-col bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:hover:bg-gray-600 dark:hover:border-gray-600 dark:border-gray-700">
         <Link
           to={loading ? `/` : `note/${note.noteId}`}
           className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
@@ -52,35 +53,79 @@ export const Note = ({ loading, note, actions, isPinned }) => {
               {isOpen && (
                 <div className="absolute right-0 mt-2 w-32 text-sm rounded-md shadow-lg bg-white z-10">
                   <ul>
-                    <li>
-                      <button
-                        className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
-                        onClick={() => pinAction(note.noteId, setDisabled)}
-                        disabled={disabled}
-                      >
-                        {isPinned ? "Unpin" : "Pin"}
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
-                        onClick={() => archiveNote(note.noteId, isPinned, setDisabled)}
-                        disabled={disabled}
-                      >
-                        Archive
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
-                        onClick={() =>
-                          deleteNote(note.noteId, isPinned, setDisabled)
-                        }
-                        disabled={disabled}
-                      >
-                        Delete
-                      </button>
-                    </li>
+                    {pinNote && unpinNote && (
+                      <li>
+                        {note.status === NOTES_STATUSES.PINNED_STATUS ? (
+                          <button
+                            className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
+                            onClick={() => unpinNote(note.noteId, setDisabled)}
+                            disabled={disabled}
+                          >
+                            Unpin
+                          </button>
+                        ) : (
+                          <button
+                            className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
+                            onClick={() => pinNote(note.noteId, setDisabled)}
+                            disabled={disabled}
+                          >
+                            Pin
+                          </button>
+                        )}
+                      </li>
+                    )}
+
+                    {setAsActive && archiveNote && (
+                      <li>
+                        {note.status === NOTES_STATUSES.ARCHIVE_STATUS ? (
+                          <button
+                            className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
+                            onClick={() =>
+                              setAsActive(note.noteId, setDisabled)
+                            }
+                            disabled={disabled}
+                          >
+                            Unarchive
+                          </button>
+                        ) : (
+                          <button
+                            className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
+                            onClick={() =>
+                              archiveNote(note.noteId, isPinned, setDisabled)
+                            }
+                            disabled={disabled}
+                          >
+                            Archive
+                          </button>
+                        )}
+                      </li>
+                    )}
+
+                    {setAsActive && deleteNote && (
+                      <li>
+                        {note.status === NOTES_STATUSES.DELETED_STATUS ? (
+                          <button
+                            className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
+                            onClick={() =>
+                              setAsActive(note.noteId, setDisabled)
+                            }
+                            disabled={disabled}
+                          >
+                            Restore
+                          </button>
+                        ) : (
+                          <button
+                            className="w-full px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none"
+                            onClick={() =>
+                              deleteNote(note.noteId, isPinned, setDisabled)
+                            }
+                            disabled={disabled}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </li>
+                    )}
                   </ul>
                 </div>
               )}

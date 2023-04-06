@@ -1,9 +1,12 @@
 import config from "../../common/config";
 import { apiRequest } from "../../common/services/request-service";
 
-const PINNED_STATUS = "pinned";
-const ARCHIVE_STATUS = "archived";
-const ACTIVE_STATUS = "active";
+export const NOTES_STATUSES = {
+  PINNED_STATUS: "pinned",
+  ARCHIVE_STATUS: "archived",
+  DELETED_STATUS: "deleted",
+  ACTIVE_STATUS: "active",
+};
 
 const noteClient = () => {
   return apiRequest.setBaseUrl(config.apiUrl).useAuth();
@@ -26,12 +29,42 @@ export const getNoteByLastKey = async (lastKey) => {
   });
 };
 
+export const getPinnedNotes = async (noteId) => {
+  return noteClient().send({
+    url: `/notes`,
+    method: "GET",
+    query: {
+      status: NOTES_STATUSES.PINNED_STATUS,
+    },
+  });
+};
+
+export const getArchivedNotes = async (noteId) => {
+  return noteClient().send({
+    url: `/notes`,
+    method: "GET",
+    query: {
+      status: NOTES_STATUSES.ARCHIVE_STATUS,
+    },
+  });
+};
+
+export const getDeletedNotes = async (noteId) => {
+  return noteClient().send({
+    url: `/notes`,
+    method: "GET",
+    query: {
+      status: NOTES_STATUSES.DELETED_STATUS,
+    },
+  });
+};
+
 export const pinNoteById = async (noteId) => {
   return noteClient().send({
     url: `/notes/${noteId}/status`,
     method: "PATCH",
     data: {
-      status: PINNED_STATUS,
+      status: NOTES_STATUSES.PINNED_STATUS,
     },
   });
 };
@@ -48,7 +81,7 @@ export const archiveNoteById = async (noteId) => {
     url: `/notes/${noteId}/status`,
     method: "PATCH",
     data: {
-      status: ARCHIVE_STATUS,
+      status: NOTES_STATUSES.ARCHIVE_STATUS,
     },
   });
 };
@@ -58,7 +91,17 @@ export const unpinNoteById = async (noteId) => {
     url: `/notes/${noteId}/status`,
     method: "PATCH",
     data: {
-      status: ACTIVE_STATUS,
+      status: NOTES_STATUSES.ACTIVE_STATUS,
+    },
+  });
+};
+
+export const setNoteActive = async (noteId) => {
+  return noteClient().send({
+    url: `/notes/${noteId}/status`,
+    method: "PATCH",
+    data: {
+      status: NOTES_STATUSES.ACTIVE_STATUS,
     },
   });
 };
@@ -68,7 +111,7 @@ export const getPinnedNote = async () => {
     url: "notes",
     method: "GET",
     query: {
-      status: PINNED_STATUS,
+      status: NOTES_STATUSES.PINNED_STATUS,
     },
   });
 };
@@ -76,7 +119,7 @@ export const getPinnedNote = async () => {
 export const getNote = async (noteId) => {
   return noteClient().send({
     url: `notes/${noteId}`,
-    method: "GET"
+    method: "GET",
   });
 };
 

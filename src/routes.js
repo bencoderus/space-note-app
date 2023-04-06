@@ -9,6 +9,8 @@ import { Dashboard } from "./dashboard/pages/Dashboard";
 import { ResetPassword } from "./auth/pages/ResetPassword";
 import { AddNote } from "./note/pages/AddNote";
 import { ShowNote } from "./note/pages/ShowNote";
+import { ArchivedNotes } from "./note/pages/ArchivedNotes";
+import { DeletedNotes } from "./note/pages/DeletedNotes";
 
 export const routerRoutes = [
   {
@@ -24,6 +26,22 @@ export const routerRoutes = [
     element: (
       <Auth>
         <AddNote />
+      </Auth>
+    ),
+  },
+  {
+    path: "/notes/trash",
+    element: (
+      <Auth>
+        <DeletedNotes />
+      </Auth>
+    ),
+  },
+  {
+    path: "/notes/archived",
+    element: (
+      <Auth>
+        <ArchivedNotes />
       </Auth>
     ),
   },

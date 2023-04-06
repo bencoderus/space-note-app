@@ -8,6 +8,7 @@ import {
   getNotes,
   getPinnedNote,
   pinNoteById,
+  setNoteActive,
   unpinNoteById,
 } from "../../note/services/note-service";
 import { DashboardLayout } from "../sections/DashboardLayout";
@@ -23,7 +24,6 @@ import {
 export const Dashboard = () => {
   const [state, dispatch] = useReducer(noteReducer, NOTE_REDUCER_INITIAL_STATE);
   const { pinnedNotes, notes, loading, lastKey } = state;
-
 
   const pinNote = async (noteId, setDisabled) => {
     setDisabled(true);
@@ -93,6 +93,23 @@ export const Dashboard = () => {
     return;
   };
 
+  const setAsActive = async (noteId, setDisabled) => {
+    setDisabled(true);
+
+    const response = await setNoteActive(noteId);
+
+    if (response.status) {
+      dispatch({ type: NOTE_REDUCER_ACTIONS.MARK_AS_ACTIVE, noteId });
+      toast.success("Note restored successfully.");
+      setDisabled(false);
+      return;
+    }
+
+    setDisabled(false);
+    toast.error("Unable to restore note.");
+    return;
+  };
+
   useEffect(() => {
     const fetchNotes = async () => {
       const response = await getNotes();
@@ -128,27 +145,38 @@ export const Dashboard = () => {
         </Link>
       }
     >
-      {pinnedNotes.length > 0 ? (
+      {pinnedNotes.length > 0 && (
         <div className="mt-8">
           <p className="text-2xl m-2 font-bold my-4">Pinned</p>
           <Notes
             loading={loading}
             notes={pinnedNotes}
-            actions={{ pinNote, unpinNote, deleteNote, archiveNote }}
-            isPinned={true}
+            actions={{
+              pinNote,
+              unpinNote,
+              deleteNote,
+              archiveNote,
+              setAsActive,
+            }}
           />
         </div>
-      ) : (
-        ""
       )}
 
       <div className="mt-8">
-        <p className="text-2xl m-2 font-bold my-4">Notes</p>
+        <p className="text-2xl font-bold my-4">Notes</p>
+        {!loading && notes.length === 0 && (
+          <p>
+            Please create your first note{" "}
+            <Link to="/notes/create" className="font-bold">
+              Here
+            </Link>
+          </p>
+        )}
+
         <Notes
           loading={loading}
           notes={notes}
-          actions={{ pinNote, unpinNote, deleteNote, archiveNote }}
-          isPinned={false}
+          actions={{ pinNote, unpinNote, deleteNote, archiveNote, setAsActive }}
         />
       </div>
 
