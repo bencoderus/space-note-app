@@ -31,9 +31,9 @@ export const Note = ({ loading, note, actions }) => {
 
   return (
     <div className="flex justify-center">
-      <div className="lg:mx-0 max-w-sm p-4 mx-4 w-full h-44 flex justify-between flex-col bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:hover:bg-gray-600 dark:hover:border-gray-600 dark:border-gray-700">
+      <div className="lg:mx-0 max-w-sm p-4 mx-4 w-full h-44 flex justify-between flex-col bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 hover:text-gray-500 dark:border-gray-700">
         <Link
-          to={loading ? `/` : `note/${note.noteId}`}
+          to={loading ? `/` : `/note/${note.noteId}`}
           className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white"
         >
           {loading ? <Skeleton /> : note.title}

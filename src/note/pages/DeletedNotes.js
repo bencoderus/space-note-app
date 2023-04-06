@@ -76,14 +76,7 @@ export const DeletedNotes = () => {
   }, []);
 
   return (
-    <DashboardLayout
-      title="Dashboard"
-      sideContent={
-        <Link to="/" className="flex items-center font-bold">
-         <span className="ml-2">All notes</span>
-        </Link>
-      }
-    >
+    <DashboardLayout>
 
       <div className="mt-8">
         <p className="text-2xl font-bold my-4">Trash</p>

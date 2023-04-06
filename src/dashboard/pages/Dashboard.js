@@ -137,14 +137,7 @@ export const Dashboard = () => {
   }, []);
 
   return (
-    <DashboardLayout
-      title="Dashboard"
-      sideContent={
-        <Link to="/notes/create" className="flex items-center font-bold">
-          <FaPlus /> <span className="ml-2">New Note</span>
-        </Link>
-      }
-    >
+    <DashboardLayout>
       {pinnedNotes.length > 0 && (
         <div className="mt-8">
           <p className="text-2xl m-2 font-bold my-4">Pinned</p>

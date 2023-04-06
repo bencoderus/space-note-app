@@ -77,14 +77,7 @@ export const ArchivedNotes = () => {
   }, []);
 
   return (
-    <DashboardLayout
-      title="Archived notes"
-      sideContent={
-        <Link to="/" className="flex items-center font-bold">
-         <span className="ml-2">notes</span>
-        </Link>
-      }
-    >
+    <DashboardLayout>
 
       <div className="mt-8">
         <p className="text-2xl font-bold my-4">Notes</p>

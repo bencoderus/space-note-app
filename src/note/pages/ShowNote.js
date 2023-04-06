@@ -65,8 +65,7 @@ export const ShowNote = () => {
 
   return (
     <DashboardLayout
-      title="New Note"
-      sideContent={<Link to="/">Goto Dashboard</Link>}
+      title="Manage Note"
     >
       {" "}
       {fetching ? (
