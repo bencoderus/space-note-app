@@ -65,14 +65,14 @@ export const Login = () => {
                 </g>
               </svg>
             </div>
-            <div className="text-2xl text-indigo-800 tracking-wide ml-2 font-semibold">
+            <div className="text-2xl text-gray-800 tracking-wide ml-2 font-semibold">
               SpaceNote
             </div>
           </div>
         </div>
         <div className="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl">
           <h2
-            className="text-center text-4xl text-indigo-900 font-display font-semibold lg:text-left xl:text-5xl
+            className="text-center text-4xl text-gray-900 font-display font-semibold lg:text-left xl:text-5xl
             xl:text-bold"
           >
             Log in
@@ -86,7 +86,7 @@ export const Login = () => {
                   Email Address
                 </div>
                 <input
-                  className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                  className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-gray-500"
                   type="email"
                   name="email"
                   onChange={handleChange}
@@ -102,7 +102,7 @@ export const Login = () => {
                   <div>
                     <Link
                       to="/forgot-password"
-                      className="text-xs font-display font-semibold text-indigo-600 hover:text-indigo-800
+                      className="text-xs font-display font-semibold text-gray-600 hover:text-gray-800
                                 cursor-pointer"
                     >
                       Forgot Password?
@@ -110,7 +110,7 @@ export const Login = () => {
                   </div>
                 </div>
                 <input
-                  className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                  className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-gray-500"
                   type="password"
                   name="password"
                   onChange={handleChange}
@@ -122,11 +122,11 @@ export const Login = () => {
                 <AuthButton text="Log In" type="submit" loading={loading} />
               </div>
             </form>
-            <div className="mt-12 text-sm font-display font-semibold text-gray-700 text-center">
+            <div className="mt-12 text-sm font-display text-gray-700 text-center">
               Don't have an account ?
               <Link
                 to="/sign-up"
-                className="cursor-pointer text-indigo-600 hover:text-indigo-800"
+                className="cursor-pointer text-gray-600 hover:text-gray-800 font-bold"
               >
                 Sign up
               </Link>

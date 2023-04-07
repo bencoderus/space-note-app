@@ -11,8 +11,7 @@ import {
   setNoteActive,
   unpinNoteById,
 } from "../../note/services/note-service";
-import { DashboardLayout } from "../sections/DashboardLayout";
-import { FaPlus } from "react-icons/fa";
+import { DashboardLayout } from "../layouts/DashboardLayout";
 import { LoadMore } from "../../note/components/LoadMore";
 import { toast } from "react-toastify";
 import {
@@ -140,7 +139,7 @@ export const Dashboard = () => {
     <DashboardLayout>
       {pinnedNotes.length > 0 && (
         <div className="mt-8">
-          <p className="text-2xl m-2 font-bold my-4">Pinned</p>
+          <p className="text-2xl m-2 font-bold">Pinned</p>
           <Notes
             loading={loading}
             notes={pinnedNotes}
@@ -156,7 +155,7 @@ export const Dashboard = () => {
       )}
 
       <div className="mt-8">
-        <p className="text-2xl font-bold my-4">Notes</p>
+        <p className="text-2xl font-bold my-4 mx-3">Notes</p>
         {!loading && notes.length === 0 && (
           <p>
             Please create your first note{" "}

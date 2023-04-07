@@ -1,5 +1,4 @@
 import React, { useEffect, useReducer } from "react";
-import { Link } from "react-router-dom";
 import { Notes } from "../../note/components/Notes";
 import {
   archiveNoteById,
@@ -14,7 +13,7 @@ import {
   NOTE_REDUCER_INITIAL_STATE,
   noteReducer,
 } from "../../note/reducers/note-reducer";
-import { DashboardLayout } from "../../dashboard/sections/DashboardLayout";
+import { DashboardLayout } from "../../dashboard/layouts/DashboardLayout";
 
 export const ArchivedNotes = () => {
   const [state, dispatch] = useReducer(noteReducer, NOTE_REDUCER_INITIAL_STATE);

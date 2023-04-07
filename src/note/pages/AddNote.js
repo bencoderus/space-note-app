@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { DashboardLayout } from "../../dashboard/sections/DashboardLayout";
+import { DashboardLayout } from "../../dashboard/layouts/DashboardLayout";
 import { ContentEditor } from "../components/ContentEditor";
 import { createNote } from "../services/note-service";
 import { toast } from "react-toastify";
 import { NoteButton } from "../components/NoteButton";
+import { FaArrowLeft } from "react-icons/fa";
 
 export const AddNote = () => {
   const editorRef = useRef(null);
@@ -34,20 +35,26 @@ export const AddNote = () => {
 
     if (!response.status) {
       setLoading(false);
-      setError(response.message)
+      setError(response.message);
       toast.error(response.message);
       return;
     }
 
     setLoading(false);
-    toast.success('Note created successfully.');
+    toast.success("Note created successfully.");
     navigate("/");
   };
 
   return (
     <DashboardLayout
       title="New Note"
-      sideContent={<Link to="/">Goto Dashboard</Link>}
+      sideContent={
+        <Link to="/" className="font-bold">
+          <span className="flex items-center">
+            <FaArrowLeft className="mr-3" /> View Notes
+          </span>
+        </Link>
+      }
     >
       <form onSubmit={handleForm}>
         <div className="my-4">
@@ -62,7 +69,7 @@ export const AddNote = () => {
         <ContentEditor ref={editorRef} />
         <div className="my-4">
           <p className="text-red-500">{error}</p>
-          <NoteButton text="Create Note" loading={loading}/>
+          <NoteButton text="Create Note" loading={loading} />
         </div>
       </form>
     </DashboardLayout>

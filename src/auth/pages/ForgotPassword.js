@@ -52,11 +52,11 @@ export const ForgotPassword = () => {
   return (
     <AuthSection>
       <div className="lg:w-1/2 xl:max-w-screen-sm">
-        <div className="py-12 bg-indigo-100 lg:bg-white flex justify-center lg:justify-start lg:px-12">
+        <div className="py-12 bg-gray-100 lg:bg-white flex justify-center lg:justify-start lg:px-12">
           <div className="cursor-pointer flex items-center">
             <div>
               <svg
-                className="w-10 text-indigo-500"
+                className="w-10 text-gray-500"
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
                 id="Layer_1"
@@ -75,14 +75,14 @@ export const ForgotPassword = () => {
                 </g>
               </svg>
             </div>
-            <div className="text-2xl text-indigo-800 tracking-wide ml-2 font-semibold">
+            <div className="text-2xl text-gray-800 tracking-wide ml-2 font-semibold">
               SpaceNote
             </div>
           </div>
         </div>
         <div className="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl">
           <h2
-            className="text-center text-4xl text-indigo-900 font-display font-semibold lg:text-left xl:text-5xl
+            className="text-center text-4xl text-gray-900 font-display font-semibold lg:text-left xl:text-5xl
             xl:text-bold"
           >
             Forgot Password
@@ -99,7 +99,7 @@ export const ForgotPassword = () => {
                   Email Address
                 </div>
                 <input
-                  className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                  className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-gray-500"
                   type="email"
                   name="email"
                   onChange={handleChange}
@@ -115,11 +115,11 @@ export const ForgotPassword = () => {
                 />
               </div>
             </form>
-            <div className="mt-12 text-sm font-display font-semibold text-gray-700 text-center">
+            <div className="mt-12 text-sm font-display text-gray-700 text-center">
               Remembered your password ?
               <Link
                 to="/"
-                className="cursor-pointer text-indigo-600 hover:text-indigo-800"
+                className="cursor-pointer font-bold text-gray-600 hover:text-gray-800"
               >
                 Login
               </Link>

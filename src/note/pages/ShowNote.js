@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { DashboardLayout } from "../../dashboard/sections/DashboardLayout";
+import { useNavigate, useParams } from "react-router-dom";
+import { DashboardLayout } from "../../dashboard/layouts/DashboardLayout";
 import { ContentEditor } from "../components/ContentEditor";
 import { getNote, updateNote } from "../services/note-service";
 import { toast } from "react-toastify";
@@ -31,7 +31,7 @@ export const ShowNote = () => {
     };
 
     fetchNotes();
-  }, []);
+  }, [id]);
 
   const handleChange = (event) => {
     setForm({
