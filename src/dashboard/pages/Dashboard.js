@@ -139,7 +139,7 @@ export const Dashboard = () => {
     <DashboardLayout>
       {pinnedNotes.length > 0 && (
         <div className="mt-8">
-          <p className="text-2xl m-2 font-bold">Pinned</p>
+        <p className="text-2xl font-bold m-4">Pinned</p>
           <Notes
             loading={loading}
             notes={pinnedNotes}
@@ -155,9 +155,9 @@ export const Dashboard = () => {
       )}
 
       <div className="mt-8">
-        <p className="text-2xl font-bold my-4 mx-3">Notes</p>
+        <p className="text-2xl font-bold m-4">Notes</p>
         {!loading && notes.length === 0 && (
-          <p>
+          <p  className="mx-4">
             Please create your first note{" "}
             <Link to="/notes/create" className="font-bold">
               Here
