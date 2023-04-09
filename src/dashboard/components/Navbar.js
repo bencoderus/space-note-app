@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { signOutUser } from "../../auth/services/auth-service";
+import { Avatar } from "./Avatar";
+import { useAuth } from "../../common/hooks/auth-hook";
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -9,6 +11,8 @@ export const Navbar = () => {
   const profileRef = useRef(null);
 
   const navigate = useNavigate();
+  const auth = useAuth();
+  const name = auth.user.user_metadata.name;
 
   const logout = () => {
     signOutUser();
@@ -136,11 +140,12 @@ export const Navbar = () => {
                   aria-haspopup="true"
                 >
                   <span className="sr-only">Open user menu</span>
-                  <img
+                  <Avatar name={name}/>
+                  {/* <img
                     className="h-8 w-8 rounded-full"
                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                     alt=""
-                  />
+                  /> */}
                 </button>
               </div>
 
