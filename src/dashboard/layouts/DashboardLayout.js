@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar } from "../components/Navbar";
 export const DashboardLayout = ({ children, title, sideContent }) => {
   return (
-    <div>
+    <>
       <Navbar />
       <div className="container mx-5 lg:mx-auto xl:mx-auto mb-10">
         {title && (
@@ -14,7 +14,7 @@ export const DashboardLayout = ({ children, title, sideContent }) => {
 
         {children}
       </div>
-    </div>
+    </>
   );
 };
 

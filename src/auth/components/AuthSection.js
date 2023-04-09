@@ -4,7 +4,7 @@ export const AuthSection = ({ children }) => {
   return (
     <div className="lg:flex">
       {children}
-      <div className="hidden lg:flex items-center justify-center bg-indigo-100 flex-1 h-screen">
+      <div className="hidden lg:flex items-center justify-center bg-gray-200 flex-1 h-screen">
         <div className="max-w-xs transform duration-200 hover:scale-110 cursor-pointer">
           <svg
             className="w-5/6 mx-auto"
