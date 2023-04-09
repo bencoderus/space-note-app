@@ -4,7 +4,7 @@ export const DashboardLayout = ({ children, title, sideContent }) => {
   return (
     <>
       <Navbar />
-      <div className="container mx-5 lg:mx-auto xl:mx-auto mb-10">
+      <div className="lg:container lg:mx-auto mb-10">
         {title && (
           <div className="flex justify-between my-6">
             <h1 className="text-xl font-bold">{title}</h1>
