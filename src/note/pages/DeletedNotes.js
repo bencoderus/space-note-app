@@ -14,6 +14,7 @@ import {
   noteReducer,
 } from "../../note/reducers/note-reducer";
 import { DashboardLayout } from "../../dashboard/layouts/DashboardLayout";
+import { PageHeading } from "../components/PageHeading";
 
 export const DeletedNotes = () => {
   const [state, dispatch] = useReducer(noteReducer, NOTE_REDUCER_INITIAL_STATE);
@@ -76,14 +77,13 @@ export const DeletedNotes = () => {
 
   return (
     <DashboardLayout>
-
       <div className="mt-8">
-        <p className="text-2xl font-bold my-4">Trash</p>
-        {!loading && notes.length === 0 && (
-          <p>
-           Your trash is empty.
-          </p>
-        )}
+        <PageHeading
+          title="Trash"
+          subtitle={
+            !loading && notes.length === 0 && <p>Your trash is empty.</p>
+          }
+        />
 
         <Notes
           loading={loading}

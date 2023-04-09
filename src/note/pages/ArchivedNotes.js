@@ -14,6 +14,7 @@ import {
   noteReducer,
 } from "../../note/reducers/note-reducer";
 import { DashboardLayout } from "../../dashboard/layouts/DashboardLayout";
+import { PageHeading } from "../components/PageHeading";
 
 export const ArchivedNotes = () => {
   const [state, dispatch] = useReducer(noteReducer, NOTE_REDUCER_INITIAL_STATE);
@@ -79,13 +80,12 @@ export const ArchivedNotes = () => {
     <DashboardLayout>
 
       <div className="mt-8">
-        <p className="text-2xl font-bold my-4">Notes</p>
-        {!loading && notes.length === 0 && (
+        <PageHeading title="Archived" subtitle={!loading && notes.length === 0 && (
           <p>
            No archived note.
           </p>
-        )}
-
+        )}/>
+        
         <Notes
           loading={loading}
           notes={notes}

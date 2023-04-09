@@ -19,6 +19,7 @@ import {
   NOTE_REDUCER_INITIAL_STATE,
   noteReducer,
 } from "../../note/reducers/note-reducer";
+import { PageHeading } from "../../note/components/PageHeading";
 
 export const Dashboard = () => {
   const [state, dispatch] = useReducer(noteReducer, NOTE_REDUCER_INITIAL_STATE);
@@ -139,7 +140,7 @@ export const Dashboard = () => {
     <DashboardLayout>
       {pinnedNotes.length > 0 && (
         <div className="mt-8">
-        <p className="text-2xl font-bold m-4">Pinned</p>
+          <PageHeading title="Pinned" />
           <Notes
             loading={loading}
             notes={pinnedNotes}
@@ -154,17 +155,22 @@ export const Dashboard = () => {
         </div>
       )}
 
-      <div className="mt-8">
-        <p className="text-2xl font-bold m-4">Notes</p>
-        {!loading && notes.length === 0 && (
-          <p  className="mx-4">
-            Please create your first note{" "}
-            <Link to="/notes/create" className="font-bold">
-              Here
-            </Link>
-          </p>
-        )}
+      <PageHeading
+        title="Notes"
+        subtitle={
+          !loading &&
+          notes.length === 0 && (
+            <span>
+              Please create your first note{" "}
+              <Link to="/notes/create" className="font-bold">
+                Here
+              </Link>
+            </span>
+          )
+        }
+      />
 
+      <div className="mt-8">
         <Notes
           loading={loading}
           notes={notes}
