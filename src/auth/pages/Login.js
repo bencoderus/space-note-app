@@ -42,11 +42,11 @@ export const Login = () => {
   return (
     <AuthSection>
       <div className="lg:w-1/2 xl:max-w-screen-sm">
-        <div className="py-12 bg-indigo-100 lg:bg-white flex justify-center lg:justify-start lg:px-12">
+        <div className="py-12 bg-gray-100 lg:bg-white flex justify-center lg:justify-start lg:px-12">
           <div className="cursor-pointer flex items-center">
             <div>
               <svg
-                className="w-10 text-indigo-500"
+                className="hidden lg:inline w-10 text-indigo-500"
                 xmlns="http://www.w3.org/2000/svg"
                 version="1.1"
                 id="Layer_1"
@@ -65,7 +65,7 @@ export const Login = () => {
                 </g>
               </svg>
             </div>
-            <div className="text-2xl text-gray-800 tracking-wide ml-2 font-semibold">
+            <div className="text-2xl text-gray-800 tracking-wide ml-2 font-bold">
               SpaceNote
             </div>
           </div>
