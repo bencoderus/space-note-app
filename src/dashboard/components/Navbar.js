@@ -12,7 +12,7 @@ export const Navbar = () => {
 
   const navigate = useNavigate();
   const auth = useAuth();
-  const name = auth.user.user_metadata.name;
+  const name = auth?.user?.user_metadata?.name;
 
   const logout = () => {
     signOutUser();

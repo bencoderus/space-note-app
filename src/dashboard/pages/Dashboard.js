@@ -20,6 +20,7 @@ import {
   noteReducer,
 } from "../../note/reducers/note-reducer";
 import { PageHeading } from "../../note/components/PageHeading";
+import { SearchInput } from "../../note/components/SearchInput";
 
 export const Dashboard = () => {
   const [state, dispatch] = useReducer(noteReducer, NOTE_REDUCER_INITIAL_STATE);
@@ -110,6 +111,12 @@ export const Dashboard = () => {
     return;
   };
 
+  const handleSearchChange = (event) => {
+    const keyword = event.target.value;
+
+    dispatch({ type: NOTE_REDUCER_ACTIONS.SEARCH_NOTE, keyword });
+  };
+
   useEffect(() => {
     const fetchNotes = async () => {
       const response = await getNotes();
@@ -138,6 +145,8 @@ export const Dashboard = () => {
 
   return (
     <DashboardLayout>
+      <SearchInput handleChange={handleSearchChange} />
+
       {pinnedNotes.length > 0 && (
         <div className="mt-8">
           <PageHeading title="Pinned" />

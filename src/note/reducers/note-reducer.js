@@ -2,6 +2,9 @@ import { NOTES_STATUSES } from "../services/note-service";
 
 export const NOTE_REDUCER_INITIAL_STATE = {
   notes: [],
+  searched: false,
+  baseNotes: [],
+  basePinnedNotes: [],
   lastKey: "",
   pinnedNotes: [],
   loading: true,
@@ -13,6 +16,7 @@ export const NOTE_REDUCER_ACTIONS = {
   ADD_NOTES: "add_notes",
   SET_NOTE: "set_note",
   SET_LAST_KEY: "set_last_key",
+  SEARCH_NOTE: "search_note",
   SET_PINNED_NOTES: "set_pinned_notes",
   ARCHIVE_NOTE: "archive_note",
   PIN_NOTE: "pin_note",
@@ -23,9 +27,9 @@ export const NOTE_REDUCER_ACTIONS = {
 /**
  * Add notes reducer.
  *
- * @param {{notes: Array<any>, lastKey: string, pinnedNotes: Array<any>, loading: boolean}} state
+ * @param {{notes: Array<any>, lastKey: string, pinnedNotes: Array<any>, loading: boolean, searched: boolean, baseNotes: Array<any>, basePinnedNotes: Array<any> }} state
  * @param {Record<string, any>} action
- * @returns {{notes: Array<any>, lastKey: string, pinnedNotes: Array<any>, loading: boolean}}
+ * @returns {{notes: Array<any>, lastKey: string, pinnedNotes: Array<any>, loading: boolean, searched: boolean, baseNotes: Array<any>, basePinnedNotes: Array<any> }}
  */
 export const noteReducer = (state, action) => {
   switch (action.type) {
@@ -68,6 +72,36 @@ export const noteReducer = (state, action) => {
       };
     }
 
+    case NOTE_REDUCER_ACTIONS.SEARCH_NOTE: {
+      const baseNotes = state.searched ? state.baseNotes : state.notes;
+      const basePinnedNotes = state.searched
+        ? state.basePinnedNotes
+        : state.pinnedNotes;
+
+      // When the search is empty, free up the state memory.
+      if (!action.keyword) {
+        return {
+          ...state,
+          notes: baseNotes,
+          pinnedNotes: basePinnedNotes,
+          basePinnedNotes: [],
+          baseNotes: [],
+          searched: false,
+        };
+      }
+
+      const regex = new RegExp(action.keyword, "i");
+
+      return {
+        ...state,
+        baseNotes: baseNotes,
+        basePinnedNotes: basePinnedNotes,
+        searched: true,
+        pinnedNotes: basePinnedNotes.filter((note) => regex.test(note.title)),
+        notes: baseNotes.filter((note) => regex.test(note.title)),
+      };
+    }
+
     case NOTE_REDUCER_ACTIONS.UNPIN_NOTE: {
       const note = state.pinnedNotes.find(
         (note) => note.noteId === action.noteId
@@ -86,7 +120,7 @@ export const noteReducer = (state, action) => {
     case NOTE_REDUCER_ACTIONS.MARK_AS_ACTIVE: {
       return {
         ...state,
-        notes: state.notes.filter((note) => note.noteId !== action.noteId)
+        notes: state.notes.filter((note) => note.noteId !== action.noteId),
       };
     }
 
