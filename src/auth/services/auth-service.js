@@ -70,6 +70,7 @@ export const signOutUser = () => {
 };
 
 export const getAuthData = () => {
+  console.log("Rendered")
   const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
 
   if (!authToken) {
