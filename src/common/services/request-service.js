@@ -91,7 +91,6 @@ export const apiRequest = {
     }
 
     if (objectIsset(query)) {
-      
       requestData["params"] = query;
     }
     const generatedHeaders = this._generateHeaders(headers);
@@ -111,7 +110,9 @@ export const apiRequest = {
     } catch (error) {
       return {
         status: false,
-        message: error.response ? error.response.data.message : "Unable to complete request.",
+        message: error.response
+          ? error.response.data.message
+          : "Unable to complete request.",
         data: error.response ? error.response.data : error.message,
       };
     }

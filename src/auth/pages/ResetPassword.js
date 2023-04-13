@@ -20,37 +20,37 @@ export const ResetPassword = () => {
     const token = params.get("access_token") || "";
 
     if (!token) {
-      navigate("/login", { state: { errorMessage: "Reset token is invalid or has expired." } });
+      navigate("/login", {
+        state: { errorMessage: "Reset token is invalid or has expired." },
+      });
     }
 
     setAccessToken(token);
   }, [navigate, accessToken]);
 
-  const validatePassword = (event) => {
-    const targetName = event.target.name;
-    const otherField =
-      targetName === "password" ? "password_confirmation" : "password";
-    const targetValue = event.target.value;
-    const fieldValue = form[otherField];
-
-    if (targetValue && fieldValue && targetValue !== fieldValue) {
+  useEffect(() => {
+    if (
+      form.password &&
+      form.password_confirmation &&
+      form.password !== form.password_confirmation
+    ) {
       setError("Password does not match.");
       setDisabled(true);
-    }
-
-    if (targetValue && fieldValue && targetValue === fieldValue) {
+    } else if (
+      form.password &&
+      form.password_confirmation &&
+      form.password === form.password_confirmation
+    ) {
       setError("");
       setDisabled(false);
     }
-  };
+  }, [form.password, form.password_confirmation]);
 
   const handleChange = (event) => {
     setForm({
       ...form,
       [event.target.name]: event.target.value,
     });
-
-    validatePassword(event);
   };
 
   const handleSubmit = async (event) => {
@@ -81,7 +81,7 @@ export const ResetPassword = () => {
     <AuthSection>
       <div className="lg:w-1/2 xl:max-w-screen-sm">
         <div className="py-12 bg-gray-100 lg:bg-white flex justify-center lg:justify-start lg:px-12">
-        <PageTitle/>
+          <PageTitle />
         </div>
         <div className="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl">
           <h2
@@ -123,6 +123,7 @@ export const ResetPassword = () => {
                 <AuthButton
                   text="Reset password"
                   type="submit"
+                  error={error}
                   loading={disabled}
                 />
               </div>

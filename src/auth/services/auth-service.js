@@ -45,32 +45,61 @@ export const register = async (data) => {
   });
 };
 
-export const loginUser = (data) => {
-  localStorage.setItem(
-    AUTH_TOKEN_KEY,
-    JSON.stringify({
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token,
-      expiresAt: data.expires_at,
-    })
-  );
+export const loginUser = (data, auth) => {
+  const token = {
+    accessToken: data.access_token,
+    refreshToken: data.refresh_token,
+    expiresAt: data.expires_at,
+  };
+  const user = data.user;
 
-  localStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
+  localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(token));
+  localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
+
+  auth.setAuth({ user, token });
 };
 
 export const getAccessToken = () => {
-  const authToken = JSON.parse(localStorage.getItem(AUTH_TOKEN_KEY) || "");
+  const authToken = JSON.parse(localStorage.getItem(AUTH_TOKEN_KEY) || "{}");
 
   return authToken?.accessToken;
 };
 
-export const signOutUser = () => {
+export const signOutUser = (auth) => {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(AUTH_USER_KEY);
+
+  auth.setAuth({
+    user: null,
+    token: null
+  })
+};
+
+export const getUserData = () => {
+  const authToken = localStorage.getItem(AUTH_TOKEN_KEY) || "{}";
+  const authUser = localStorage.getItem(AUTH_USER_KEY) || "{}";
+
+  return {
+    token: JSON.parse(authToken),
+    user: JSON.parse(authUser),
+  };
+};
+
+export const isAuthenticated = (token) => {
+  if (!token || (token && !token.expiresAt)) {
+    return false;
+  }
+
+  const now = Math.round(Date.now() / 1000);
+
+  if (now > token?.expiresAt) {
+    return false;
+  }
+
+  return true;
 };
 
 export const getAuthData = () => {
-  console.log("Rendered")
   const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
 
   if (!authToken) {
@@ -93,6 +122,6 @@ export const getAuthData = () => {
 
   return {
     isAuthenticated: true,
-    user: JSON.parse(localStorage.getItem(AUTH_USER_KEY) || ""),
+    user: JSON.parse(localStorage.getItem(AUTH_USER_KEY) || "{}"),
   };
 };

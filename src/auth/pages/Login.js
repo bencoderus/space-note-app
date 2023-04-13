@@ -4,8 +4,11 @@ import { AuthButton } from "../components/AuthButton";
 import { AuthSection } from "../components/AuthSection";
 import { attemptLogin, loginUser } from "../services/auth-service";
 import { PageTitle } from "../components/PageTitle";
+import { useAuth } from "../../common/hooks/auth-hook";
 
 export const Login = () => {
+  const auth = useAuth();
+
   const [error, setError] = useState("");
   const [form, setForm] = useState({});
   const location = useLocation();
@@ -35,7 +38,7 @@ export const Login = () => {
     }
 
     setLoading(false);
-    loginUser(response.data.data);
+    loginUser(response.data.data, auth);
 
     navigate('/')
   };
