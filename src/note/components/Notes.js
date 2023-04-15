@@ -23,7 +23,7 @@ export const Notes = ({
         : notes.map((note, key) => (
             <Note
               note={note}
-              key={key}
+              key={note.noteId || key}
               loading={loading}
               actions={actions}
             />
