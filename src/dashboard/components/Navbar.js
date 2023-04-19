@@ -11,11 +11,11 @@ export const Navbar = () => {
   const profileRef = useRef(null);
 
   const navigate = useNavigate();
-  const authUser = useAuth();
-  const name = authUser.auth?.user?.user_metadata?.name;
+  const [auth, setAuth] = useAuth();
+  const name = auth.user?.user_metadata?.name;
 
   const logout = () => {
-    signOutUser(authUser);
+    signOutUser(setAuth);
     navigate("/login");
   };
 

@@ -7,10 +7,9 @@ import { PageTitle } from "../components/PageTitle";
 import { useAuth } from "../../common/hooks/auth-hook";
 
 export const Login = () => {
-  const auth = useAuth();
-
   const [error, setError] = useState("");
   const [form, setForm] = useState({});
+  const [,setAuth] = useAuth();
   const location = useLocation();
   const authMessage = location?.state?.authMessage || ""
   const errorMessage = location?.state?.errorMessage || ""
@@ -38,7 +37,7 @@ export const Login = () => {
     }
 
     setLoading(false);
-    loginUser(response.data.data, auth);
+    loginUser(response.data.data, setAuth);
 
     navigate('/')
   };

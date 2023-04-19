@@ -1,6 +1,7 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Notes } from "../../note/components/Notes";
 import {
+  NOTES_STATUSES,
   deleteNoteById,
   getDeletedNotes,
   getNoteByLastKey,
@@ -8,17 +9,14 @@ import {
 } from "../../note/services/note-service";
 import { LoadMore } from "../../note/components/LoadMore";
 import { toast } from "react-toastify";
-import {
-  NOTE_REDUCER_ACTIONS,
-  NOTE_REDUCER_INITIAL_STATE,
-  noteReducer,
-} from "../../note/reducers/note-reducer";
 import { DashboardLayout } from "../../dashboard/layouts/DashboardLayout";
 import { PageHeading } from "../components/PageHeading";
+import { useDispatch, useSelector } from "react-redux";
+import { noteSelector, noteActions } from "../store";
 
 export const DeletedNotes = () => {
-  const [state, dispatch] = useReducer(noteReducer, NOTE_REDUCER_INITIAL_STATE);
-  const { notes, loading, lastKey } = state;
+  const dispatch = useDispatch();
+  const { notes, loading, lastKey } = useSelector(noteSelector);
 
   const deleteNote = async (noteId, isPinned, setDisabled) => {
     setDisabled(true);
@@ -26,7 +24,7 @@ export const DeletedNotes = () => {
     const response = await deleteNoteById(noteId);
 
     if (response.status) {
-      dispatch({ type: NOTE_REDUCER_ACTIONS.REMOVE_NOTE, noteId, isPinned });
+      dispatch(noteActions.removeNoteById({ noteId }));
       setDisabled(false);
       toast.success("Note removed successfully");
       return;
@@ -43,7 +41,7 @@ export const DeletedNotes = () => {
     const response = await setNoteActive(noteId);
 
     if (response.status) {
-      dispatch({ type: NOTE_REDUCER_ACTIONS.MARK_AS_ACTIVE, noteId });
+      dispatch(noteActions.markAsActiveById({ noteId }));
       toast.success("Note restored successfully.");
       setDisabled(false);
       return;
@@ -56,24 +54,24 @@ export const DeletedNotes = () => {
 
   useEffect(() => {
     const fetchNotes = async () => {
+      dispatch(noteActions.fetchStart());
+
       const response = await getDeletedNotes();
 
       if (response.status) {
-        dispatch({
-          type: NOTE_REDUCER_ACTIONS.SET_NOTE,
-          notes: response.data.data.records,
-        });
-        dispatch({
-          type: NOTE_REDUCER_ACTIONS.SET_LAST_KEY,
-          lastKey: response.data.data.lastKey,
-        });
-
-        dispatch({ type: NOTE_REDUCER_ACTIONS.FETCH_COMPLETED });
+        dispatch(
+          noteActions.setNotes({
+            notes: response.data.data.records,
+            lastKey: response.data.data.lastKey,
+          })
+        );
       }
     };
 
     fetchNotes();
-  }, []);
+  }, [dispatch]);
+
+  const trashNotes = useMemo(() => notes.filter((note) => note.status === NOTES_STATUSES.DELETED_STATUS), [notes])
 
   return (
     <DashboardLayout>
@@ -87,7 +85,7 @@ export const DeletedNotes = () => {
 
         <Notes
           loading={loading}
-          notes={notes}
+          notes={trashNotes}
           actions={{ deleteNote, setAsActive }}
         />
       </div>

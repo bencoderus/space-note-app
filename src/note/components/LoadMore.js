@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { Spinner } from "../../common/components/Spinner";
-import { NOTE_REDUCER_ACTIONS } from "../reducers/note-reducer";
+import { noteActions } from "../store";
 
-export const LoadMore = ({
-  text,
-  dispatcher,
-  lastKey,
-  action,
-}) => {
+export const LoadMore = ({ text, dispatcher, lastKey, action }) => {
   const [loading, setLoading] = useState(false);
 
   const LoadMoreContent = async () => {
@@ -18,8 +13,8 @@ export const LoadMore = ({
       const notes = response.data.data.records;
       const lastKey = response.data.data.lastKey;
 
-      dispatcher({type: NOTE_REDUCER_ACTIONS.SET_LAST_KEY, lastKey})
-      dispatcher({type: NOTE_REDUCER_ACTIONS.ADD_NOTES, notes})
+      dispatcher(noteActions.setLastKey({ lastKey }));
+      dispatcher(noteActions.addNotes({ notes }));
     }
 
     setLoading(false);

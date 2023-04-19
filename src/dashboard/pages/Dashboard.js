@@ -1,7 +1,8 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Notes } from "../../note/components/Notes";
 import {
+  NOTES_STATUSES,
   archiveNoteById,
   deleteNoteById,
   getNoteByLastKey,
@@ -14,17 +15,15 @@ import {
 import { DashboardLayout } from "../layouts/DashboardLayout";
 import { LoadMore } from "../../note/components/LoadMore";
 import { toast } from "react-toastify";
-import {
-  NOTE_REDUCER_ACTIONS,
-  NOTE_REDUCER_INITIAL_STATE,
-  noteReducer,
-} from "../../note/reducers/note-reducer";
 import { PageHeading } from "../../note/components/PageHeading";
 import { SearchInput } from "../../note/components/SearchInput";
+import { useDispatch, useSelector } from "react-redux";
+import { noteSelector, noteActions } from "../../note/store";
+
 
 export const Dashboard = () => {
-  const [state, dispatch] = useReducer(noteReducer, NOTE_REDUCER_INITIAL_STATE);
-  const { pinnedNotes, notes, loading, lastKey } = state;
+  const dispatch = useDispatch();
+  const { notes, loading, lastKey } = useSelector(noteSelector);
 
   const pinNote = async (noteId, setDisabled) => {
     setDisabled(true);
@@ -32,7 +31,7 @@ export const Dashboard = () => {
     const response = await pinNoteById(noteId);
 
     if (response.status) {
-      dispatch({ type: NOTE_REDUCER_ACTIONS.PIN_NOTE, noteId });
+      dispatch(noteActions.pinNoteById({ noteId }));
       setDisabled(false);
       toast.success("Note pinned successfully");
       return;
@@ -49,7 +48,7 @@ export const Dashboard = () => {
     const response = await deleteNoteById(noteId);
 
     if (response.status) {
-      dispatch({ type: NOTE_REDUCER_ACTIONS.REMOVE_NOTE, noteId, isPinned });
+      dispatch(noteActions.removeNoteById({ noteId }));
       setDisabled(false);
       toast.success("Note removed successfully");
       return;
@@ -66,7 +65,7 @@ export const Dashboard = () => {
     const response = await archiveNoteById(noteId);
 
     if (response.status) {
-      dispatch({ type: NOTE_REDUCER_ACTIONS.REMOVE_NOTE, noteId, isPinned });
+      dispatch(noteActions.archiveNoteById({ noteId }));
       setDisabled(false);
       toast.success("Note archived successfully");
       return;
@@ -83,7 +82,7 @@ export const Dashboard = () => {
     const response = await unpinNoteById(noteId);
 
     if (response.status) {
-      dispatch({ type: NOTE_REDUCER_ACTIONS.UNPIN_NOTE, noteId });
+      dispatch(noteActions.unpinNoteById({ noteId }));
       toast.success("Note unpinned successfully.");
       setDisabled(false);
       return;
@@ -100,7 +99,7 @@ export const Dashboard = () => {
     const response = await setNoteActive(noteId);
 
     if (response.status) {
-      dispatch({ type: NOTE_REDUCER_ACTIONS.MARK_AS_ACTIVE, noteId });
+      dispatch(noteActions.markAsActiveById({ noteId }));
       toast.success("Note restored successfully.");
       setDisabled(false);
       return;
@@ -114,34 +113,38 @@ export const Dashboard = () => {
   const handleSearchChange = (event) => {
     const keyword = event.target.value;
 
-    dispatch({ type: NOTE_REDUCER_ACTIONS.SEARCH_NOTE, keyword });
+    dispatch(noteActions.searchNote({ keyword }));
   };
 
   useEffect(() => {
     const fetchNotes = async () => {
+      dispatch(noteActions.fetchStart());
+
       const response = await getNotes();
       const pinnedResponse = await getPinnedNote();
 
       if (response.status && pinnedResponse.status) {
-        dispatch({
-          type: NOTE_REDUCER_ACTIONS.SET_NOTE,
-          notes: response.data.data.records,
-        });
-        dispatch({
-          type: NOTE_REDUCER_ACTIONS.SET_PINNED_NOTES,
-          notes: pinnedResponse.data.data.records,
-        });
-        dispatch({
-          type: NOTE_REDUCER_ACTIONS.SET_LAST_KEY,
-          lastKey: response.data.data.lastKey,
-        });
-
-        dispatch({ type: NOTE_REDUCER_ACTIONS.FETCH_COMPLETED });
+        dispatch(
+          noteActions.setNotes({
+            notes: response.data.data.records,
+            pinnedNotes: pinnedResponse.data.data.records,
+            lastKey: response.data.data.lastKey,
+          })
+        );
       }
     };
 
     fetchNotes();
-  }, []);
+  }, [dispatch]);
+
+  const pinnedNotes = useMemo(
+    () => notes.filter((note) => note.status === NOTES_STATUSES.PINNED_STATUS),
+    [notes]
+  );
+  const activeNotes = useMemo(
+    () => notes.filter((note) => note.status === NOTES_STATUSES.ACTIVE_STATUS),
+    [notes]
+  );
 
   return (
     <DashboardLayout>
@@ -182,7 +185,7 @@ export const Dashboard = () => {
       <div className="mt-8">
         <Notes
           loading={loading}
-          notes={notes}
+          notes={activeNotes}
           actions={{ pinNote, unpinNote, deleteNote, archiveNote, setAsActive }}
         />
       </div>

@@ -45,7 +45,7 @@ export const register = async (data) => {
   });
 };
 
-export const loginUser = (data, auth) => {
+export const loginUser = (data, setAuth) => {
   const token = {
     accessToken: data.access_token,
     refreshToken: data.refresh_token,
@@ -56,7 +56,7 @@ export const loginUser = (data, auth) => {
   localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(token));
   localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
 
-  auth.setAuth({ user, token });
+  setAuth({ user, token });
 };
 
 export const getAccessToken = () => {
@@ -65,14 +65,14 @@ export const getAccessToken = () => {
   return authToken?.accessToken;
 };
 
-export const signOutUser = (auth) => {
+export const signOutUser = (setAuth) => {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(AUTH_USER_KEY);
 
-  auth.setAuth({
+  setAuth({
     user: null,
-    token: null
-  })
+    token: null,
+  });
 };
 
 export const getUserData = () => {
