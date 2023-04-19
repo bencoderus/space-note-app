@@ -77,7 +77,7 @@ export const ArchivedNotes = () => {
       <div className="mt-8">
         <PageHeading
           title="Archived"
-          subtitle={!loading && notes.length === 0 && <p>No archived note.</p>}
+          subtitle={!loading && archivedNotes.length === 0 && <p>No archived note.</p>}
         />
 
         <Notes

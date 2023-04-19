@@ -125,9 +125,3 @@ export const noteActions = noteSlice.actions;
 export const noteReducer = noteSlice.reducer;
 
 export const noteSelector = (state) => state.note;
-
-export const getPinnedNoteSelector = (state) =>
-  state.notes.filter((note) => note.status === NOTES_STATUSES.PINNED_STATUS);
-
-export const getActiveNoteSelector = (state) =>
-  state.notes.filter((note) => note.status === NOTES_STATUSES.ACTIVE_STATUS);

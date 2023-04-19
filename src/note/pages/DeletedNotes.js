@@ -71,7 +71,7 @@ export const DeletedNotes = () => {
     fetchNotes();
   }, [dispatch]);
 
-  const trashNotes = useMemo(() => notes.filter((note) => note.status === NOTES_STATUSES.DELETED_STATUS), [notes])
+  const deletedNotes = useMemo(() => notes.filter((note) => note.status === NOTES_STATUSES.DELETED_STATUS), [notes])
 
   return (
     <DashboardLayout>
@@ -79,13 +79,13 @@ export const DeletedNotes = () => {
         <PageHeading
           title="Trash"
           subtitle={
-            !loading && notes.length === 0 && <p>Your trash is empty.</p>
+            !loading && deletedNotes.length === 0 && <p>Your trash is empty.</p>
           }
         />
 
         <Notes
           loading={loading}
-          notes={trashNotes}
+          notes={deletedNotes}
           actions={{ deleteNote, setAsActive }}
         />
       </div>
