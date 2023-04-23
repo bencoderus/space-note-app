@@ -5,6 +5,7 @@ const AUTH_TOKEN_KEY = "authToken";
 const AUTH_USER_KEY = "authUser";
 
 export const PASSWORD_RESET_ROUTE = `${config.appUrl}/reset-password`;
+export const SOCIAL_AUTH_ROUTE = `${config.appUrl}/auth/initiate`;
 
 const authClient = () => {
   return apiRequest.setBaseUrl(config.apiUrl);
@@ -42,6 +43,24 @@ export const register = async (data) => {
     url: "auth/register",
     method: "POST",
     data,
+  });
+};
+
+export const loginWithSocial = async (provider) => {
+  return authClient().send({
+    url: "auth/social-login",
+    method: "POST",
+    data: {
+      provider,
+      redirectTo: SOCIAL_AUTH_ROUTE,
+    },
+  });
+};
+
+export const getUser = async (token) => {
+  return authClient().setAuthorizationToken(token).send({
+    url: "auth/user",
+    method: "GET",
   });
 };
 
@@ -97,6 +116,14 @@ export const isAuthenticated = (token) => {
   }
 
   return true;
+};
+
+export const getExpiredAt = (expiresIn) => {
+  // Assuming the authentication process takes 200 seconds.
+  const value = expiresIn - 200;
+
+  const now = Math.round(Date.now() / 1000);
+  return now + value;
 };
 
 export const getAuthData = () => {

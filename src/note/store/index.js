@@ -71,7 +71,7 @@ export const noteSlice = createSlice({
     },
 
     addNotes: (state, action) => {
-      state.notes.concat(action.payload.notes);
+      state.notes = state.notes.concat(action.payload.notes);
     },
 
     archiveNoteById: (state, action) => {

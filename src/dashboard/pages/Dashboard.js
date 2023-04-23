@@ -171,7 +171,7 @@ export const Dashboard = () => {
         title="Notes"
         subtitle={
           !loading &&
-          notes.length === 0 && (
+          activeNotes.length === 0 && (
             <span>
               Please create your first note{" "}
               <Link to="/notes/create" className="font-bold">

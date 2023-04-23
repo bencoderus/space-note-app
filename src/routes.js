@@ -11,6 +11,7 @@ import { AddNote } from "./note/pages/AddNote";
 import { ShowNote } from "./note/pages/ShowNote";
 import { ArchivedNotes } from "./note/pages/ArchivedNotes";
 import { DeletedNotes } from "./note/pages/DeletedNotes";
+import { AuthenticateSocial } from "./auth/pages/AuthenticateSocial";
 
 export const routerRoutes = [
   {
@@ -82,6 +83,14 @@ export const routerRoutes = [
     element: (
       <Guest>
         <Login />
+      </Guest>
+    ),
+  },
+  {
+    path: "/auth/initiate",
+    element: (
+      <Guest>
+        <AuthenticateSocial />
       </Guest>
     ),
   },
