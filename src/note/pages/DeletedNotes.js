@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo } from "react";
-import { Notes } from "../../note/components/Notes";
+import { Notes } from "../components/Notes";
 import {
   NOTES_STATUSES,
   deleteNoteById,
   getDeletedNotes,
   getNoteByLastKey,
   setNoteActive,
-} from "../../note/services/note-service";
-import { LoadMore } from "../../note/components/LoadMore";
+} from "../services/note-service";
+import { LoadMore } from "../components/LoadMore";
 import { toast } from "react-toastify";
 import { DashboardLayout } from "../../dashboard/layouts/DashboardLayout";
 import { PageHeading } from "../components/PageHeading";
@@ -49,7 +49,6 @@ export const DeletedNotes = () => {
 
     setDisabled(false);
     toast.error("Unable to restore note.");
-    return;
   };
 
   useEffect(() => {
